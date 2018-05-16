@@ -7,7 +7,17 @@ public class Compiler {
     private char[] ch;
     private int[] next1;
     private int[] next2;
-    private char[] notVocabs = {'(', ')', '[', ']', '*', '+', '?', '|', '!', '\\'};
+    private char[] notVocabs = {
+            '(', ')',
+            '[', ']',
+            '*',//0 or more
+            '+',//1 or more
+            '?',//0 or 1 times
+            '|',//Or
+            '!',//Not
+            '\\',//Escape
+            '.'//Anything
+    };
 
     Compiler(String pattern) {
         this.p = pattern.toCharArray();
@@ -33,7 +43,9 @@ public class Compiler {
         int r;
 
         r = term();
-        if (j < p.length && ( isVocab(p[j]) || p[j] == '('))
+        if(j >= p.length){
+            return r;
+        } else if (isVocab(p[j]) || p[j] == '(')
             expression();
         return (r);
     }
@@ -45,7 +57,7 @@ public class Compiler {
         if(j >= p.length)
             return r;
 
-        if (p[j] == '*'){
+         if (p[j] == '*'){
             set_state(state,' ',state+1,t1);
             r = state;
             j++;
@@ -71,8 +83,13 @@ public class Compiler {
 
         if(j >= p.length)
             return state+1;
-
-        if (isVocab(p[j])) {
+        if(p[j] == '\\'){
+            set_state(state, p[j+1], state + 2, state + 2);
+            j+=2;
+            r = state;
+            state++;
+            r = factor();
+        } else if (isVocab(p[j])) {
             set_state(state, p[j], state + 1, state + 1);
             j++;
             r = state;
