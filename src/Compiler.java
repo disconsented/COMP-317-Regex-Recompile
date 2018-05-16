@@ -84,7 +84,7 @@ public class Compiler {
         if(j >= p.length)
             return state+1;
         if(p[j] == '\\'){
-            set_state(state, p[j+1], state + 2, state + 2);
+            set_state(state, p[j+1], state + 1, state + 1);
             j+=2;
             r = state;
             state++;
