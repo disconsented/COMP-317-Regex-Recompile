@@ -34,7 +34,8 @@ public class Compiler {
             throw new Exception("End of Pattern");
         set_state(state, ' ', 0, 0);
         for (int i = 0; i < state+1; i++) {
-            System.out.println(String.format("%s | %s %s %s", i, ch[i], next1[i], next2[i]));
+//            System.out.println(String.format("%s | %s %s %s", i, ch[i], next1[i], next2[i]));
+            System.out.println(String.format("%s,%s,%s,%s", i, ch[i], next1[i], next2[i]));
         }
     }
 
@@ -116,6 +117,7 @@ public class Compiler {
             for (int i = j; i < p.length; i++) {
                 if(!isVocab(p[i]) && p[i-1] != '\\'){
                     if(p[i] == ']'){
+                        i++;
                         set_state(state, ' ', t1, i);
                         j = i;
                         state++;
