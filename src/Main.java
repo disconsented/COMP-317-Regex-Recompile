@@ -1,7 +1,12 @@
 public class Main {
     public static void main(String[] args) {
         if(args.length > 0){
-
+            Compiler c = new Compiler(args[0]);
+            try {
+                c.parse();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             String[] patterns = { "\\+(\\a\\ba-Z)?\\c\\d\\e\\fg", "[aaabbzz]", "(a*b+ac).+(a*b+ac)", "(a*b+ac)d", "ba*(a+b)b"};
             for (String pattern : patterns) {
