@@ -59,12 +59,12 @@ public class Compiler {
             return r;
 
         if(p[j] == '\\'){//Print and skip forward
-            set_state(state, p[j+1], j + 1, j + 1);
-            j+=2;
-            r = state;
+            j++;
+            set_state(state, p[j], j, j);
+            j++;
             state++;
-            r = state;
-        }else if (p[j] == '*'){
+            r = term();
+        } else if (p[j] == '*'){
             set_state(state,' ',state+1,t1);
             r = state;
             j++;
@@ -99,13 +99,13 @@ public class Compiler {
 
         if(j >= p.length)
             return state+1;
-        if(p[j] == '\\'){//Print and skip forward
-            set_state(state, p[j+1], state + 1, state + 1);
-            j+=2;
+        if(p[j] == '.'){
+            set_state(state,' ',j,j);
             r = state;
+            j++;
             state++;
-            r = state;
-        } else if (isVocab(p[j])) {
+        } else
+        if (isVocab(p[j])) {
             set_state(state, p[j], state + 1, state + 1);
             j++;
             r = state;
