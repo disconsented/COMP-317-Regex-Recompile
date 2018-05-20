@@ -59,7 +59,7 @@ public class Compiler {
             return r;
 
         if(p[j] == '\\'){//Print and skip forward
-            set_state(state, p[j+1], state + 1, state + 1);
+            set_state(state, p[j+1], j + 1, j + 1);
             j+=2;
             r = state;
             state++;
@@ -124,9 +124,10 @@ public class Compiler {
                 if(!isVocab(p[i]) && p[i-1] != '\\'){
                     if(p[i] == ']'){
                         set_state(state, ' ', t1-1, i);
+                        i++;
                         j = i;
                         state++;
-                        return t1;
+                        return i;
                     }
                 }
             }
