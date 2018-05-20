@@ -3,7 +3,7 @@ public class Main {
         if(args.length > 0){
 
         } else {
-            String[] patterns = { "\\+\\a\\b\\c\\d\\e\\fg", "(a*b+ac)d", "ba*(a+b)b"};
+            String[] patterns = { "\\+(\\a\\ba-Z)?\\c\\d\\e\\fg", "[aaabbzz]", "(a*b+ac).+(a*b+ac)", "(a*b+ac)d", "ba*(a+b)b"};
             for (String pattern : patterns) {
                 Compiler c = new Compiler(pattern);
                 try {

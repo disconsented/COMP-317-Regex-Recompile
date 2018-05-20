@@ -45,7 +45,7 @@ public class Compiler {
         r = term();
         if(j >= p.length){
             return r;
-        } else if (isVocab(p[j]) || p[j] == '(')
+        } else if (isVocab(p[j]) || p[j] == '(' || p[j] == '[')
             expression();
         return (r);
     }
@@ -62,7 +62,6 @@ public class Compiler {
             r = state;
             j++;
             state++;
-
         } else if(p[j] == '+'){
             if(next1[f]==next2[f])
                 next2[f]=state;
@@ -74,7 +73,17 @@ public class Compiler {
             if(next1[f]==next2[f])
                 next2[f]=state;
             next1[f]=state;
-        }
+        } else if(p[j] == '?'){
+             set_state(state,' ',state+1,t1);
+             r = state;
+             j++;
+             state++;
+         } else if(p[j] == '.'){
+             set_state(state,' ',state+1,state+1);
+             r = state;
+             j++;
+             state++;
+         }
         return r;
     }
 
@@ -83,7 +92,7 @@ public class Compiler {
 
         if(j >= p.length)
             return state+1;
-        if(p[j] == '\\'){
+        if(p[j] == '\\'){//Print and skip forward
             set_state(state, p[j+1], state + 1, state + 1);
             j+=2;
             r = state;
@@ -103,11 +112,18 @@ public class Compiler {
                 throw new Exception("Unbalanced brackets");
         } else if(p[j] == '['){
             j++;
-            r = expression();
-            if (p[j] == ']')
-                j++;
-            else
-                throw new Exception("Unbalanced parentheses");
+            int t1 = j;
+            for (int i = j; i < p.length; i++) {
+                if(!isVocab(p[i]) && p[i-1] != '\\'){
+                    if(p[i] == ']'){
+                        set_state(state, ' ', t1, i);
+                        j = i;
+                        state++;
+                        return t1;
+                    }
+                }
+            }
+            throw new Exception("Unbalanced parenthesis");
         } else
             throw new Exception();
         return (r);
