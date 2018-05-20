@@ -58,7 +58,13 @@ public class Compiler {
         if(j >= p.length)
             return r;
 
-         if (p[j] == '*'){
+        if(p[j] == '\\'){//Print and skip forward
+            set_state(state, p[j+1], state + 1, state + 1);
+            j+=2;
+            r = state;
+            state++;
+            r = state;
+        }else if (p[j] == '*'){
             set_state(state,' ',state+1,t1);
             r = state;
             j++;
@@ -98,7 +104,7 @@ public class Compiler {
             j+=2;
             r = state;
             state++;
-            r = factor();
+            r = state;
         } else if (isVocab(p[j])) {
             set_state(state, p[j], state + 1, state + 1);
             j++;
@@ -117,8 +123,7 @@ public class Compiler {
             for (int i = j; i < p.length; i++) {
                 if(!isVocab(p[i]) && p[i-1] != '\\'){
                     if(p[i] == ']'){
-                        i++;
-                        set_state(state, ' ', t1, i);
+                        set_state(state, ' ', t1-1, i);
                         j = i;
                         state++;
                         return t1;
