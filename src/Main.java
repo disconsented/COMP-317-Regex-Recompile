@@ -72,7 +72,7 @@ class Compiler {
         r = term();
         if (j >= p.length) {
             return r;
-        } else if (isVocab(p[j]) || p[j] == '(' || p[j] == '[')
+        } else if (isVocab(p[j]) || p[j] == '(' || p[j] == '[' || p[j] == '!')
             expression();
         return (r);
     }
@@ -88,8 +88,10 @@ class Compiler {
             j++;
             set_state(state, p[j], state+1, state+1);
             j++;
+
             state++;
             r = term();
+
         } else if (p[j] == '*') {
             set_state(state, ' ', state + 1, t1);
             r = state;
@@ -115,10 +117,11 @@ class Compiler {
             state++;
         } else if (p[j] == '.') {
             set_state(state, ' ', state + 1, state + 1);
-            r = state;
             j++;
             state++;
+            r = factor();
         }
+
         return r;
     }
 
@@ -187,7 +190,7 @@ class Compiler {
             int end = 0;
             //Scan forward for the entries in the literal
             for (int i = j; i < p.length; i++) {
-                if (p[i] == ']' && p[i] + 1 == '!' && p[i - 1] != '\\') {//Reached the end, break if we need to. Ensure its not escaped
+                if (p[i] == ']' && p[i+1] == '!' && p[i - 1] != '\\') {//Reached the end, break if we need to. Ensure its not escaped
                     end = i;
                     break;
                 }
@@ -196,7 +199,7 @@ class Compiler {
             int length = end - j;
 
             //Output the branching states before the matches
-            for (int i = state+1; i < state + length; i+=2) {
+            for (int i = state+1; i < state + length+1; i+=2) {
                 set_state(state, ' ', i, i+1);
                 state++;
             }
@@ -207,7 +210,7 @@ class Compiler {
                 state++;
                 j++;
             }
-            j++;
+            j+=2;
             r = state;
         } else
             throw new Exception();
