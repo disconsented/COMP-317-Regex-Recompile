@@ -1,3 +1,18 @@
+/**
+ * E -> T
+ * E -> TE (ET)
+ * E -> TE [ET]
+ * E -> TE ![ET]!
+ * T -> \\
+ * T -> F?
+ * T -> F
+ * T -> F*
+ * T -> F+T
+ * T -> F|T
+ * F -> V
+ * F -> .
+ * F -> (E)
+ */
 public class Main {
     public static void main(String[] args) {
         if (args.length > 0) {
@@ -59,6 +74,7 @@ class Compiler {
         if (j > p.length)
             throw new Exception("End of Pattern");
         set_state(state, ' ', 0, 0);
+        //Printed at the end due to rewrites
         for (int i = 0; i < state + 1; i++) {
 //            System.out.println(String.format("%s | %s %s %s", i, ch[i], next1[i], next2[i]));
             System.out.println(String.format("%s,%s,%s,%s", i, ch[i], next1[i], next2[i]));
@@ -70,8 +86,10 @@ class Compiler {
         int r;
 
         r = term();
+        //End state
         if (j >= p.length) {
             return r;
+            //Expanded for new features
         } else if (isVocab(p[j]) || p[j] == '(' || p[j] == '[' || p[j] == '!')
             expression();
         return (r);
@@ -91,13 +109,12 @@ class Compiler {
 
             state++;
             r = term();
-
-        } else if (p[j] == '*') {
+        } else if (p[j] == '*') {//Existing code
             set_state(state, ' ', state + 1, t1);
             r = state;
             j++;
             state++;
-        } else if (p[j] == '+') {
+        } else if (p[j] == '+') {//Existing code
             if (next1[f] == next2[f])
                 next2[f] = state;
             next1[f] = state;
@@ -121,6 +138,7 @@ class Compiler {
             state++;
             r = factor();
         } else if (p[j] == '|') {
+            //Rewrite the last request to push it forward one and place the new branching machine representing or in its place
             set_state(state, p[j-1], state + 2, state + 2);
             set_state(state-1, ' ', state , state + 1);
             j++;
