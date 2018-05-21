@@ -1,0 +1,1 @@
+Expects a single arg which is the regex expression, tested with ""(a*b+ac).d[zxc]\*.![jfk]!a|b""
