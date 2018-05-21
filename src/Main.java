@@ -120,6 +120,12 @@ class Compiler {
             j++;
             state++;
             r = factor();
+        } else if (p[j] == '|') {
+            set_state(state, p[j-1], state + 2, state + 2);
+            set_state(state-1, ' ', state , state + 1);
+            j++;
+            state++;
+            r = factor();
         }
 
         return r;
